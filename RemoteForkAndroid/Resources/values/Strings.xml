@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="ApplicationName">RemoteFork 1.2</string>
+  <string name="StartServer">Запустить</string>
+  <string name="StopServer">Остановить</string>
+  <string name="StartingStatus">Запуск..</string>
+  <string name="StopingStatus">Остановка..</string>
+  <string name="StartStatus">Запущен</string>
+  <string name="StopStatus">Остановлен</string>
+  <string name="ErrorStart">Ошибка при запуске</string>
+  <string name="ErrorStop">Ошибка при остановке</string>
+</resources>
