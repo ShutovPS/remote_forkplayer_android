@@ -4,7 +4,7 @@ using Android.Content;
 namespace RemoteForkAndroid {
     public static class SettingManager {
         public const string AppName = "RemoteFork 1.2";
-        public const string AppVersion = "1.2f0";
+        public const string AppVersion = "1.2f2";
         public const string LastIp = "LastIp";
 
         public static void SetValue( string key, string value) {

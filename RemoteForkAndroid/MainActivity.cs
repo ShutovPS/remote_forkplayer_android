@@ -10,8 +10,9 @@ using Exception = System.Exception;
 namespace RemoteForkAndroid {
     [Activity(Label = "RemoteFork 1.2", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity {
-        private HttpServer httpServer;
-        private Thread thread;
+        private static HttpServer httpServer;
+        private static Thread thread;
+        private static string logs;
 
         Button bStartServer, bStopServer;
         EditText etLogs;
@@ -47,13 +48,20 @@ namespace RemoteForkAndroid {
                 }
                 sIps.SetSelection(adapter.GetPosition(ip));
 
-                bStartServer.PerformClick();
+                if (httpServer == null) {
+                    bStartServer.PerformClick();
+                } else {
+                    etLogs.Text = logs;
+                    tvStatus.Text = GetString(Resource.String.StartStatus);
+                    bStartServer.Enabled = false;
+                    bStopServer.Enabled = true;
+                }
             }
         }
 
         private async void StartServer(object sender, EventArgs e) {
             try {
-                etLogs.Text += GetString(Resource.String.StartingStatus) + "\r\n";
+                WriteLine(GetString(Resource.String.StartingStatus));
                 tvStatus.Text = GetString(Resource.String.StartingStatus);
 
                 IPAddress ip;
@@ -70,32 +78,39 @@ namespace RemoteForkAndroid {
                                 ip, 8028));
 
                     SettingManager.SetValue(SettingManager.LastIp, ip.ToString());
-
-                    etLogs.Text += GetString(Resource.String.StartStatus) + "\r\n";
+                    
+                    WriteLine(GetString(Resource.String.StartStatus));
                     tvStatus.Text = GetString(Resource.String.StartStatus);
                     bStartServer.Enabled = false;
                     bStopServer.Enabled = true;
                 }
             } catch (Exception ex) {
                 Console.Out.WriteLine("Exception: " + ex.Message);
-                etLogs.Text += GetString(Resource.String.ErrorStart) + "\r\n";
+                WriteLine(GetString(Resource.String.ErrorStart));
             }
         }
 
         private void StopServer(object sender, EventArgs e) {
             try {
-                etLogs.Text += GetString(Resource.String.StopingStatus) + "\r\n";
+                WriteLine(GetString(Resource.String.StopingStatus));
                 tvStatus.Text = GetString(Resource.String.StopingStatus);
                 if (httpServer != null) {
                     httpServer.Stop();
                 }
-                etLogs.Text += GetString(Resource.String.StopStatus) + "\r\n";
+                WriteLine(GetString(Resource.String.StopStatus));
                 tvStatus.Text = GetString(Resource.String.StopStatus);
                 bStartServer.Enabled = true;
                 bStopServer.Enabled = false;
             } catch (Exception ex) {
                 Console.Out.WriteLine("Exception: " + ex.Message);
-                etLogs.Text += GetString(Resource.String.ErrorStop) + "\r\n";
+                WriteLine(GetString(Resource.String.ErrorStop));
+            }
+        }
+
+        public void WriteLine(string text, bool save = true) {
+            etLogs.Text = text + "\r\n" + etLogs.Text;
+            if (save) {
+                logs = etLogs.Text;
             }
         }
     }
