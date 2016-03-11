@@ -9,6 +9,9 @@ using Encoding = System.Text.Encoding;
 
 namespace RemoteFork {
     public static class HttpUtility {
+        private const string DefaultUserAgent =
+            "Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.41 (KHTML, like Gecko) Large Screen WebAppManager Safari/537.41";
+
         private static readonly string[] ExceptionsHeader = {
             "Content-Type", "Connection"
         };
@@ -18,8 +21,9 @@ namespace RemoteFork {
                 using (var httpClient = new WebClient()) {
                     if (header != null) {
                         AddToHeader(httpClient, header);
+                    } else {
+                        httpClient.Headers.Add("User-Agent", DefaultUserAgent);
                     }
-                    //httpClient.Headers.UserAgent.ParseAdd(DefaultUserAgent);
 
                     var response = await httpClient.DownloadDataTaskAsync(new Uri(link));
                     return ReadContext(response);
@@ -36,8 +40,9 @@ namespace RemoteFork {
                 using (var httpClient = new WebClient()) {
                     if (header != null) {
                         AddToHeader(httpClient, header);
+                    } else {
+                        httpClient.Headers.Add("User-Agent", DefaultUserAgent);
                     }
-                    //httpClient.Headers.UserAgent.ParseAdd(DefaultUserAgent);
 
                     var content = new NameValueCollection();
                     foreach (var d in data) {
