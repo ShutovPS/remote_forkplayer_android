@@ -4,7 +4,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace RemoteFork {
+namespace tv.forkplayer.remotefork.server {
     public class HttpProcessor {
         public Hashtable httpHeaders = new Hashtable();
 

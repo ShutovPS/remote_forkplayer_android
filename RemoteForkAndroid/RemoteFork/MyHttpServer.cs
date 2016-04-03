@@ -4,14 +4,22 @@ using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
 
-namespace RemoteFork {
+namespace tv.forkplayer.remotefork.server {
     public class MyHttpServer : HttpServer {
+        public static HashSet<string> Devices = new HashSet<string>();
+
         public MyHttpServer(IPAddress ip, int port) : base(ip, port) {
         }
 
-        private string TestRequest() {
+        private string TestRequest(string httpUrl) {
             string result =
                 "<html><h1>ForkPlayer DLNA Work!</h1><br><b>Server by Visual Studio 2015</b></html>";
+            if (httpUrl.IndexOf('|') > 0) {
+                string device = httpUrl.Replace("/test?", "");
+                if (!Devices.Contains(device)) {
+                    Devices.Add(device);
+                }
+            }
             return result;
         }
 
@@ -100,7 +108,7 @@ namespace RemoteFork {
                 result = ParserlinkRequest(httpUrl);
             } else {
                 if (httpUrl.StartsWith("/test")) {
-                    result = TestRequest();
+                    result = TestRequest(httpUrl);
                 }
             }
 

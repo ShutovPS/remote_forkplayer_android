@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace RemoteFork {
+namespace tv.forkplayer.remotefork.server {
     public static class Tools {
         public static IPAddress[] GetIPAddresses(string hostname = "") {
             var hostEntry = Dns.GetHostEntry(hostname);

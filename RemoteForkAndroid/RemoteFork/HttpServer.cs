@@ -4,10 +4,12 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace RemoteFork {
+namespace tv.forkplayer.remotefork.server {
     public abstract class HttpServer {
         private readonly TcpListener listener;
         private readonly CancellationTokenSource cts = new CancellationTokenSource();
+
+        public bool IsWork { get; private set; }
 
         protected HttpServer(IPAddress ip, int port) {
             listener = new TcpListener(new IPEndPoint(ip, port));
@@ -15,6 +17,7 @@ namespace RemoteFork {
         }
 
         public async void Listen() {
+            IsWork = true;
             while (!cts.IsCancellationRequested) {
                 try {
                     var client = await listener.AcceptTcpClientAsync();
@@ -25,6 +28,7 @@ namespace RemoteFork {
                     Console.WriteLine("Stop");
                 }
             }
+            IsWork = false;
         }
 
         public void Stop() {

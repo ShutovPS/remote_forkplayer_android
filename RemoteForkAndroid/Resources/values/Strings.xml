@@ -9,4 +9,8 @@
   <string name="StopStatus">Остановлен</string>
   <string name="ErrorStart">Ошибка при запуске</string>
   <string name="ErrorStop">Ошибка при остановке</string>
+  <string name="LoadPlaylist">Загрузить плейлист</string>
+  <string name="LoadedPlaylist">Плейлист загружен</string>
+  <string name="PlaylistBadFormat">Неверный формат файла плейлиста!</string>
+  <string name="DevicesNotFound">Нет активных устройств</string>
 </resources>

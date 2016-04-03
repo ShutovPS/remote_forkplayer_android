@@ -1,7 +1,7 @@
 using Android.App;
 using Android.Content;
 
-namespace RemoteForkAndroid {
+namespace tv.forkplayer.remotefork {
     public static class SettingManager {
         public const string AppName = "RemoteFork 1.2";
         public const string AppVersion = "1.2f2";

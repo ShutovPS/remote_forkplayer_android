@@ -1,35 +1,32 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Encoding = System.Text.Encoding;
 
-namespace RemoteFork {
+namespace tv.forkplayer.remotefork.server {
     public static class HttpUtility {
         private const string DefaultUserAgent =
             "Mozilla/5.0 (Web0S; Linux/SmartTV) AppleWebKit/537.41 (KHTML, like Gecko) Large Screen WebAppManager Safari/537.41";
 
-        private static readonly string[] ExceptionsHeader = {
-            "Content-Type", "Connection"
-        };
-
         public static async Task<string> GetRequest(string link, Dictionary<string, string> header = null) {
             try {
-                using (var httpClient = new WebClient()) {
+                using (var httpClient = new HttpClient()) {
                     if (header != null) {
-                        AddToHeader(httpClient, header);
-                    } else {
-                        httpClient.Headers.Add("User-Agent", DefaultUserAgent);
+                        foreach (var h in header) {
+                            try {
+                                httpClient.DefaultRequestHeaders.Add(h.Key, h.Value);
+                            } catch (Exception) {
+                            }
+                        }
                     }
+                    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(DefaultUserAgent);
 
-                    var response = await httpClient.DownloadDataTaskAsync(new Uri(link));
-                    return ReadContext(response);
+                    var response = await httpClient.GetAsync(link).ConfigureAwait(false);
+                    return await ReadContext(response.Content);
                 }
             } catch (Exception ex) {
-                Console.Out.WriteLine(ex.Message);
+                Console.WriteLine(ex.Message);
                 return ex.Message;
             }
         }
@@ -37,54 +34,38 @@ namespace RemoteFork {
         public static async Task<string> PostRequest(string link, Dictionary<string, string> data,
             Dictionary<string, string> header = null) {
             try {
-                using (var httpClient = new WebClient()) {
+                using (var httpClient = new HttpClient()) {
                     if (header != null) {
-                        AddToHeader(httpClient, header);
-                    } else {
-                        httpClient.Headers.Add("User-Agent", DefaultUserAgent);
+                        foreach (var h in header) {
+                            try {
+                                httpClient.DefaultRequestHeaders.Add(h.Key, h.Value);
+                            } catch (Exception) {
+                            }
+                        }
                     }
+                    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(DefaultUserAgent);
 
-                    var content = new NameValueCollection();
-                    foreach (var d in data) {
-                        content.Add(d.Key, d.Value);
-                    }
+                    HttpContent content = new FormUrlEncodedContent(data);
 
-                    var response = await httpClient.UploadValuesTaskAsync(new Uri(link), content).ConfigureAwait(false);
-                    return ReadContext(response);
+                    var response = await httpClient.PostAsync(link, content).ConfigureAwait(false);
+                    return await ReadContext(response.Content);
                 }
             } catch (Exception ex) {
-                Console.Out.WriteLine("Exception: " + ex.Message);
+                Console.WriteLine(ex.Message);
                 return ex.Message;
             }
         }
 
-        private static void AddToHeader(WebClient httpClient, Dictionary<string, string> header) {
-            foreach (var h in header) {
-                bool add = ExceptionsHeader.All(s => !Regex.IsMatch(h.Key, s, RegexOptions.IgnoreCase));
-                if (add) {
-                    httpClient.Headers.Add(h.Key, h.Value);
-                }
-            }
-        }
-
-        private static string ReadContext(byte[] context) {
+        private static async Task<string> ReadContext(HttpContent context) {
+            var result = await context.ReadAsByteArrayAsync();
             try {
-                return Encoding.Default.GetString(context);
-            } catch (Exception) {
-                try {
-                    return Encoding.UTF8.GetString(context);
-                } catch (Exception) {
-                    try {
-                        return Encoding.ASCII.GetString(context);
-                    } catch (Exception) {
-                        try {
-                            return Encoding.Unicode.GetString(context);
-                        } catch (Exception) {
-                            return string.Empty;
-                        }
-                    }
-                }
+                var encoding = Encoding.GetEncoding(context.Headers.ContentType.CharSet);
+                result = Encoding.Convert(encoding, Encoding.Default,
+                result);
+            } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
             }
+            return Encoding.Default.GetString(result);
         }
     }
 }

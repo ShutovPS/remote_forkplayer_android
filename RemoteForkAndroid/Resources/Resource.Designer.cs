@@ -60,20 +60,23 @@ namespace RemoteForkAndroid
 		public partial class Id
 		{
 			
+			// aapt resource value: 0x7f050003
+			public const int bLoadPlaylist = 2131034115;
+			
 			// aapt resource value: 0x7f050001
 			public const int bStartServer = 2131034113;
 			
 			// aapt resource value: 0x7f050002
 			public const int bStopServer = 2131034114;
 			
-			// aapt resource value: 0x7f050004
-			public const int etLogs = 2131034116;
+			// aapt resource value: 0x7f050005
+			public const int etLogs = 2131034117;
 			
 			// aapt resource value: 0x7f050000
 			public const int sIps = 2131034112;
 			
-			// aapt resource value: 0x7f050003
-			public const int tvStatusServer = 2131034115;
+			// aapt resource value: 0x7f050004
+			public const int tvStatusServer = 2131034116;
 			
 			static Id()
 			{
@@ -107,11 +110,23 @@ namespace RemoteForkAndroid
 			// aapt resource value: 0x7f040000
 			public const int ApplicationName = 2130968576;
 			
+			// aapt resource value: 0x7f04000c
+			public const int DevicesNotFound = 2130968588;
+			
 			// aapt resource value: 0x7f040007
 			public const int ErrorStart = 2130968583;
 			
 			// aapt resource value: 0x7f040008
 			public const int ErrorStop = 2130968584;
+			
+			// aapt resource value: 0x7f040009
+			public const int LoadPlaylist = 2130968585;
+			
+			// aapt resource value: 0x7f04000a
+			public const int LoadedPlaylist = 2130968586;
+			
+			// aapt resource value: 0x7f04000b
+			public const int PlaylistBadFormat = 2130968587;
 			
 			// aapt resource value: 0x7f040001
 			public const int StartServer = 2130968577;

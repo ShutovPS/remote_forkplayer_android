@@ -18,6 +18,11 @@
         android:layout_height="wrap_content"
         android:text="@string/StopServer"
         android:enabled="false" />
+    <Button
+        android:text="@string/LoadPlaylist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/bLoadPlaylist" />
     <TextView
         android:text="Status"
         android:textAppearance="?android:attr/textAppearanceMedium"
